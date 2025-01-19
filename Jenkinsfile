@@ -34,5 +34,13 @@ pipeline {
                 }
             }
         }
+        stage('Deploy image') {
+            steps {
+                script {
+                    sh "docker run -d --name tp4-container -p 8080:80 ${registry}:latest"
+                }
+            }
+        }
     }
 }
+
