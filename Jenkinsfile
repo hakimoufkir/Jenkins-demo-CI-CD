@@ -33,7 +33,7 @@ pipeline {
             steps {
                 script {
                     // Use `sh` for Linux/Unix systems
-                    sh "docker run -d --name tp4_container -p 8080:80 ${registry}:latest"
+                    sh "docker run -d --name tp4_container -p 5000:80 ${registry}:latest"
                 }
             }
         }
