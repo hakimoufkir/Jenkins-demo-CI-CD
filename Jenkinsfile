@@ -10,7 +10,7 @@ pipeline {
             steps {
                 git branch: 'main',
                     credentialsId: 'github-token', // Adjust to your actual GitHub credentials ID
-                    url: 'https://github.com/hakimoufkir/tp4.git' // Replace with your repository URL
+                    url: 'https://github.com/hakimoufkir/Jenkins-demo-CI-CD.git' // Replace with your repository URL
             }
         }
         stage('Building Image') {
