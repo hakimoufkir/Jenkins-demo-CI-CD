@@ -1,7 +1,7 @@
 pipeline {
     environment {
         registry = "abdelhakimoufkir/tp4"
-        registryCredential = 'docker-hub-token' // Adjust this to match your actual credentials ID in Jenkins
+        registryCredential = 'docker-hub-token'
         dockerImage = ''
     }
     agent any
@@ -9,8 +9,8 @@ pipeline {
         stage('Cloning Git') {
             steps {
                 git branch: 'main',
-                    credentialsId: 'github-token', // Adjust to your actual GitHub credentials ID
-                    url: 'https://github.com/hakimoufkir/Jenkins-demo-CI-CD.git' // Replace with your repository URL
+                    credentialsId: 'github-token',
+                    url: 'https://github.com/hakimoufkir/Jenkins-demo-CI-CD.git'
             }
         }
         stage('Building Image') {
