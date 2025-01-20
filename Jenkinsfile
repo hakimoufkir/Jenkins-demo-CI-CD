@@ -1,22 +1,22 @@
 pipeline {
     environment {
-        registry = "abdelhakimoufkir/tp4"
-        registryCredential = 'docker-hub-token'
-        dockerImage = ''
+        registry = "abdelhakimoufkir/tp4" // Your Docker Hub repository
+        registryCredential = 'docker-hub-token' // Your Jenkins Docker Hub credentials ID
+        dockerImage = '' // Variable to hold the Docker image reference
     }
     agent any
     stages {
         stage('Cloning Git') {
             steps {
                 git branch: 'main',
-                    credentialsId: 'github-token',
-                    url: 'https://github.com/hakimoufkir/Jenkins-demo-CI-CD.git'
+                    credentialsId: 'github-token', // Your Jenkins GitHub credentials ID
+                    url: 'https://github.com/hakimoufkir/tp4.git' // Your GitHub repository URL
             }
         }
         stage('Building Image') {
             steps {
                 script {
-                    dockerImage = docker.build("${registry}:latest")
+                    dockerImage = docker.build("${registry}:latest") // Builds and tags the image
                 }
             }
         }
@@ -24,7 +24,7 @@ pipeline {
             steps {
                 script {
                     docker.withRegistry('https://index.docker.io/v1/', registryCredential) {
-                        dockerImage.push()
+                        dockerImage.push() // Pushes the image to Docker Hub
                     }
                 }
             }
@@ -32,8 +32,11 @@ pipeline {
         stage('Deploy Image') {
             steps {
                 script {
-                    // Use `sh` for Linux/Unix systems
-                    sh "docker run -d --name tp4_container -p 5000:80 ${registry}:latest"
+                    // Stop and remove any existing container named tp4_container, then deploy a new one
+                    sh """
+                    docker ps -q --filter name=tp4_container | grep -q . && docker stop tp4_container && docker rm tp4_container || true
+                    docker run -d --name tp4_container -p 8080:80 ${registry}:latest
+                    """
                 }
             }
         }
