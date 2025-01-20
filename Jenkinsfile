@@ -17,7 +17,7 @@ pipeline {
         stage('Building Image') {
             steps {
                 script {
-                    dockerImage = docker.build("${registry}:${BUILD_NUMBER}")
+                    dockerImage = docker.build("${registry}:latest")
                 }
             }
         }
@@ -33,7 +33,7 @@ pipeline {
         stage('Deploy Image') {
             steps {
                 script {
-                    bat "docker run -d ${registry}:${BUILD_NUMBER}"
+                    bat "docker run -d ${registry}:latest"
                 }
             }
         }
