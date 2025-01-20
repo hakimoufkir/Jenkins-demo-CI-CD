@@ -1,8 +1,7 @@
 pipeline {
     environment {
-        registry = "abdelhakimoufkir/tp4" // your dockerhub credentials (to change)
-        registryCredential = 'docker-hub-token' // this credentialID is created in jenkins and
-                                         //contain dockerhub credentials(to change)
+        registry = "abdelhakimoufkir/tp4"
+        registryCredential = 'docker-hub-token' // Adjust this to match your actual credentials ID in Jenkins
         dockerImage = ''
     }
     agent any
@@ -10,8 +9,8 @@ pipeline {
         stage('Cloning Git') {
             steps {
                 git branch: 'main',
-                    credentialsId: 'github-token', // your GIT credentials (to change)
-                    url: 'https://github.com/hakimoufkir/tp4.git' // your GIT repo (to change)
+                    credentialsId: 'github-token', // Adjust to your actual GitHub credentials ID
+                    url: 'https://github.com/hakimoufkir/tp4.git' // Replace with your repository URL
             }
         }
         stage('Building Image') {
@@ -33,7 +32,8 @@ pipeline {
         stage('Deploy Image') {
             steps {
                 script {
-                    bat "docker run -d ${registry}:latest"
+                    // Use `sh` for Linux/Unix systems
+                    sh "docker run -d --name tp4_container -p 8080:80 ${registry}:latest"
                 }
             }
         }
