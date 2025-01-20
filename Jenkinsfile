@@ -10,7 +10,7 @@ pipeline {
             steps {
                 git branch: 'main',
                     credentialsId: 'github-token', // Your Jenkins GitHub credentials ID
-                    url: 'https://github.com/hakimoufkir/tp4.git' // Your GitHub repository URL
+                    url: 'https://github.com/hakimoufkir/Jenkins-demo-CI-CD.git' // Your GitHub repository URL
             }
         }
         stage('Building Image') {
@@ -32,10 +32,13 @@ pipeline {
         stage('Deploy Image') {
             steps {
                 script {
-                    // Stop and remove any existing container named tp4_container, then deploy a new one
+                    // Find existing container, remove it, and launch a new one
                     sh """
-                    docker ps -q --filter name=tp4_container | grep -q . && docker stop tp4_container && docker rm tp4_container || true
-                    docker run -d --name tp4_container -p 8080:80 ${registry}:latest
+                    if [ \$(docker ps -q --filter name=tp4_container) ]; then
+                        docker stop tp4_container
+                        docker rm tp4_container
+                    fi
+                    docker run -d --name tp4_container -p 5000:80 ${registry}:latest
                     """
                 }
             }
