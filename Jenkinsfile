@@ -1,46 +1,41 @@
 pipeline {
     environment {
-        registry = "abdelhakimoufkir/tp4"
-        registryCredential = 'dockerhub'
+        registry = "abdelhakimoufkir/tp4" // your dockerhub credentials (to change)
+        registryCredential = 'docker-hub-token' // this credentialID is created in jenkins and
+                                         //contain dockerhub credentials(to change)
         dockerImage = ''
     }
     agent any
     stages {
         stage('Cloning Git') {
             steps {
-                git 'https://github.com/hakimoufkir/tp4'
+                git branch: 'main',
+                    credentialsId: 'github-token', // your GIT credentials (to change)
+                    url: 'https://github.com/hakimoufkir/tp4.git' // your GIT repo (to change)
             }
         }
-        stage('Building image') {
+        stage('Building Image') {
             steps {
                 script {
-                    dockerImage = docker.build registry + ":latest"
-                }
-            }
-        }
-        stage('Test image') {
-            steps {
-                script {
-                    echo "Tests passed"
+                    dockerImage = docker.build("${registry}:${BUILD_NUMBER}")
                 }
             }
         }
         stage('Publish Image') {
             steps {
                 script {
-                    docker.withRegistry('', registryCredential) {
+                    docker.withRegistry('https://index.docker.io/v1/', registryCredential) {
                         dockerImage.push()
                     }
                 }
             }
         }
-        stage('Deploy image') {
+        stage('Deploy Image') {
             steps {
                 script {
-                    sh "docker run -d --name tp4-container -p 8080:80 ${registry}:latest"
+                    bat "docker run -d ${registry}:${BUILD_NUMBER}"
                 }
             }
         }
     }
 }
-
